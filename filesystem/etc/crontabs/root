@@ -1,0 +1,5 @@
+*/15 * * * * /usr/sbin/ntpsetclock 60 log >/dev/null 2>&1
+# * * * * * /usr/sbin/startscene_crontab.lua `/bin/date "+%u %H:%M"`
+# 48 3,4,5 * * * /usr/sbin/otapredownload >/dev/null 2>&1
+# 0 3 * * * /usr/sbin/rmportscanresult.sh >/dev/null 2>&1
+

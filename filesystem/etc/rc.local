@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+export PATH=/tmp/data/usr/bin:$PATH
+
+pkgs="coreutils-nohup socat iperf3"
+logger -t rc-local "installing packages: $pkgs"
+opkg update
+opkg install -d ram_data $pkgs
+
+# killall socat || true
+# gnu-nohup socat TCP-LISTEN:5000,fork,reuseaddr TCP:10.100.102.1:80 >/dev/null 2>&1 &
+
+touch /tmp/portscan.pid
+chmod 0444 /tmp/portscan.pid
+
+# iptables -P OUTPUT ACCEPT
+# iptables -F OUTPUT
+# iptables -A OUTPUT -d 127.0.0.0/8 -s 127.0.0.0/8 -j ACCEPT
+# iptables -A OUTPUT -d 172.16.0.0/24 -s 172.16.0.0/24 -j ACCEPT
+# iptables -P OUTPUT DROP
+
+exit 0

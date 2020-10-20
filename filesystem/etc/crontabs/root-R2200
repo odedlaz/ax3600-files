@@ -1,0 +1,11 @@
+*/15 * * * * /usr/sbin/ntpsetclock 60 log >/dev/null 2>&1
+# * * * * * /usr/sbin/startscene_crontab.lua `/bin/date "+%u %H:%M"`
+# 0 12 * * * /usr/sbin/recordscene_crontab.lua
+# 45 23 * * * /usr/sbin/points_sysset_pro.lua >/dev/null 2>&1
+# */1 * * * * /usr/sbin/wwdog
+# 0 20 * * * /usr/bin/stat_lan
+# 5 * * * * /usr/sbin/otapredownload >/dev/null 2>&1
+# 0 5 * * 3 /etc/init.d/web_filter_record restart >/dev/null 2>&1
+# 0 3 * * * /etc/init.d/sysapihttpd restart >/dev/null 2>&1
+# 0 8,19 * * * /usr/sbin/netdig.sh >/dev/null 2>&1
+# */2 * * * * sh /usr/sbin/xqwhc_push.cron >/dev/null 2>&1

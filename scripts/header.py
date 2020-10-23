@@ -21,7 +21,7 @@ def extract(path):
 
 def parse(raw_header):
     # strip crc32
-    raw_header = raw_header[4:].split(b'\x00')
+    raw_header = raw_header[crc32.CRC32_LEN:].split(b'\x00')
     header = dict((x.decode().split("=") for x in raw_header))
     return header
 

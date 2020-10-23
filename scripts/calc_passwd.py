@@ -22,8 +22,12 @@ def get_serial_numbers():
         return map(str.strip, sys.stdin)
 
 
+def calc_passwd(sn):
+    passwd = sn + get_salt(sn)
+    m = hashlib.md5(passwd.encode())
+    return m.hexdigest()[:8]
+
+
 if __name__ == "__main__":
     for sn in get_serial_numbers():
-        passwd = sn + get_salt(sn)
-        m = hashlib.md5(passwd.encode())
-        print(f"{sn}: {m.hexdigest()[:8]}")
+        print(f"{sn}: {calc_passwd(sn)}")

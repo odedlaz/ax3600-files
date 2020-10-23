@@ -30,7 +30,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Header Parser')
     subparsers = parser.add_subparsers(title="commands", dest="command")
 
-    parser_extract = subparsers.add_parser(COMMAND_EXTRACT, help='modify header')
+    parser_extract = subparsers.add_parser(COMMAND_EXTRACT, help='extract header')
     parser_extract.add_argument('path', metavar='PATH')
 
     parser_modify = subparsers.add_parser(COMMAND_MODIFY, help='modify header')

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import hashlib
-import select
+import header
 
 # credit goes to zhoujiazhao:
 # https://blog.csdn.net/zhoujiazhao/article/details/102578244
@@ -17,11 +17,6 @@ def get_salt(sn):
     return "-".join(reversed(salt["others"].split("-")))
 
 
-def get_serial_numbers():
-    if select.select([sys.stdin, ], [], [], 0.0)[0]:
-        return map(str.strip, sys.stdin)
-
-
 def calc_passwd(sn):
     passwd = sn + get_salt(sn)
     m = hashlib.md5(passwd.encode())
@@ -29,5 +24,11 @@ def calc_passwd(sn):
 
 
 if __name__ == "__main__":
-    for sn in get_serial_numbers():
-        print(f"{sn}: {calc_passwd(sn)}")
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <PATH>")
+        sys.exit(1)
+
+    path = sys.argv[1]
+    _, raw_header = header.extract(path)
+    header = header.parse(raw_header)
+    print(calc_passwd(header['SN']))

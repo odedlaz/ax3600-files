@@ -41,7 +41,7 @@ def parse_arguments():
 
 
 def extract_command(path):
-    raw_header = extract(path)
+    _, raw_header = extract(path)
     header = parse(raw_header)
     for k, v in header.items():
         print(f"{k}: {v}")

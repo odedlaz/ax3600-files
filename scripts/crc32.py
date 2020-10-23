@@ -6,8 +6,14 @@ import textwrap
 
 CRC32_LEN = 0x4
 
+
 def extract(data):
     return "0x" + data[:CRC32_LEN].hex()
+
+
+def extract_human_readable(data):
+    raw_crc32 = data[:CRC32_LEN]
+    return " ".join([x.upper() for x in textwrap.wrap(raw_crc32.hex(), 2)])
 
 
 def calculate(data):

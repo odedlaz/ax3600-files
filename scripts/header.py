@@ -42,6 +42,7 @@ def parse_arguments():
 
 def extract_command(path):
     _, raw_header = extract(path)
+    print(f"CRC32: {crc32.extract_human_readable(raw_header)}")
     header = parse(raw_header)
     for k, v in header.items():
         print(f"{k}: {v}")

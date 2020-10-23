@@ -13,13 +13,13 @@ def extract(path):
     with open(path, 'rb') as f:
         header = b''
         while True:
-            c = f.read(2)
-            # end of header
-            if c == b'\x00\x00':
+            buf = f.read(10)
+            # if buf is only zeroes
+            if not buf.strip(b'\x00'):
                 break
-            header += c
+            header += buf
 
-        return f.tell(), header.rstrip(b'\x00')
+        return header.rstrip(b'\x00')
 
 
 def parse(raw_header):
@@ -45,7 +45,7 @@ def parse_arguments():
 
 
 def extract_command(path):
-    _, raw_header = extract(path)
+    raw_header = extract(path)
     print(f"CRC32: {crc32.extract_human_readable(raw_header)}")
     header = parse(raw_header)
     for k, v in header.items():
@@ -53,8 +53,7 @@ def extract_command(path):
 
 
 def modify_command(src, dst, test=False):
-    size, raw_header = extract(src)
-    padding = size - len(raw_header)
+    raw_header = extract(src)
 
     header = parse(raw_header)
 
@@ -63,15 +62,27 @@ def modify_command(src, dst, test=False):
         header['CountryCode'] = 'US'
         for flag in ['telnet_en', 'ssh_en', 'uart_en']:
             header[flag] = 1
+        header['boot_wait'] = "on"
 
     crc32_data = crc32.get_data(src)
-    only_data = crc32_data[len(raw_header) + padding:]
+    only_data = crc32_data[len(raw_header):]
 
     # re-assemble the raw header after modifications
     new_raw_header = b'\x00'.join([f"{k}={v}".encode() for k, v in header.items()])
 
+    raw_header_no_crc32 = raw_header[crc32.CRC32_LEN:]
+    excess_bytes = len(new_raw_header) - len(raw_header_no_crc32)
+    if excess_bytes > 0:
+        # header grew -> we need remove some zeroes
+        # make sure we don't remove anything that's not zeroes (with some extra)
+        assert only_data[:excess_bytes + 10].strip(b"\x00")
+        new_only_data = only_data[excess_bytes:]
+    else:
+        # header shrunk -> pad with zeroes
+        new_only_data = b'\x00' * abs(excess_bytes) + only_data
+
     # create crc32 data with crc32 prefix reset
-    data_without_crc32 = b'\x00' * crc32.CRC32_LEN + new_raw_header + b'\x00' * padding + only_data
+    data_without_crc32 = b'\x00' * crc32.CRC32_LEN + new_raw_header + new_only_data
 
     # calculate new crc32 and update the data with it
     new_raw_crc32 = bytes.fromhex(crc32.calculate(data_without_crc32).lstrip("0x"))

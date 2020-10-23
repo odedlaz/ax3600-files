@@ -5,6 +5,7 @@ import textwrap
 
 
 CRC32_LEN = 0x4
+CRC32_DATA_LEN = 0xffff
 
 
 def extract(data):
@@ -24,7 +25,7 @@ def calculate(data):
 
 def get_data(path):
     with open(path, "rb") as f:
-        return f.read(0xffff + 1)
+        return f.read(CRC32_DATA_LEN + 1)
 
 
 if __name__ == "__main__":

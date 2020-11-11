@@ -29,6 +29,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     path = sys.argv[1]
-    _, raw_header = header.extract(path)
+    raw_header = header.extract(path)
     header = header.parse(raw_header)
     print(calc_passwd(header['SN']))

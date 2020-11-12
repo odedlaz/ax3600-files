@@ -39,6 +39,7 @@ def parse_arguments():
     parser_modify = subparsers.add_parser(COMMAND_MODIFY, help='modify header')
     parser_modify.add_argument('src', metavar='SRC')
     parser_modify.add_argument('dst', metavar='DST')
+    parser_modify.add_argument('country', nargs='?', default=None, metavar='COUNTRY')
     parser_modify.add_argument('--test', default=False, action='store_true')
 
     return parser.parse_args()
@@ -52,20 +53,21 @@ def extract_command(path):
         print(f"{k}: {v}")
 
 
-def modify_command(src, dst, test=False):
+def modify_command(src, dst, country=None, test=False):
     raw_header = extract(src)
 
     header = parse(raw_header)
 
     # in test mode we don't modify the header
     if not test:
-        header['CountryCode'] = 'US'
+        if country:
+            header['CountryCode'] = country
         for flag in ['telnet_en', 'ssh_en', 'uart_en']:
             header[flag] = 1
         header['boot_wait'] = "on"
 
     crc32_data = crc32.get_data(src)
-    only_data = crc32_data[len(raw_header):]
+    zero_data = crc32_data[len(raw_header):]
 
     # re-assemble the raw header after modifications
     new_raw_header = b'\x00'.join([f"{k}={v}".encode() for k, v in header.items()])
@@ -75,14 +77,14 @@ def modify_command(src, dst, test=False):
     if excess_bytes > 0:
         # header grew -> we need remove some zeroes
         # make sure we don't remove anything that's not zeroes (with some extra)
-        assert only_data[:excess_bytes + 10].strip(b"\x00")
-        new_only_data = only_data[excess_bytes:]
+        assert not zero_data[:excess_bytes + 10].strip(b"\x00")
+        new_zero_data = zero_data[excess_bytes:]
     else:
         # header shrunk -> pad with zeroes
-        new_only_data = b'\x00' * abs(excess_bytes) + only_data
+        new_zero_data = b'\x00' * abs(excess_bytes) + zero_data
 
     # create crc32 data with crc32 prefix reset
-    data_without_crc32 = b'\x00' * crc32.CRC32_LEN + new_raw_header + new_only_data
+    data_without_crc32 = b'\x00' * crc32.CRC32_LEN + new_raw_header + new_zero_data
 
     # calculate new crc32 and update the data with it
     new_raw_crc32 = bytes.fromhex(crc32.calculate(data_without_crc32).lstrip("0x"))
@@ -110,4 +112,4 @@ if __name__ == "__main__":
         extract_command(args.path)
 
     if args.command == COMMAND_MODIFY:
-        modify_command(args.src, args.dst, args.test)
+        modify_command(args.src, args.dst, args.country, args.test)

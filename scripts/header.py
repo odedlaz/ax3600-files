@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 import argparse
 import crc32
+import re
 
 COMMAND_EXTRACT = "extract"
 COMMAND_MODIFY = "modify"
@@ -29,6 +30,18 @@ def parse(raw_header):
     return header
 
 
+def validate_country_code(cc):
+    # extracted from /etc/init.d/timezone
+    if cc in ('EU', 'US', 'KR', 'UK', 'IN', 'CN'):
+        return cc
+
+    # otherwise, CountryCode need to be uppercase with two letters
+    if not re.match('[A-Z][A-Z]', cc):
+        raise argparse.ArgumentTypeError(f"country should consist of two upper case characters")
+
+    return cc
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Header Parser')
     subparsers = parser.add_subparsers(title="commands", dest="command")
@@ -37,9 +50,9 @@ def parse_arguments():
     parser_extract.add_argument('path', metavar='PATH')
 
     parser_modify = subparsers.add_parser(COMMAND_MODIFY, help='modify header')
-    parser_modify.add_argument('src', metavar='SRC')
-    parser_modify.add_argument('dst', metavar='DST')
-    parser_modify.add_argument('country', nargs='?', default=None, metavar='COUNTRY')
+    parser_modify.add_argument('src', metavar='SRC', help='path to bdata file')
+    parser_modify.add_argument('dst', metavar='DST', help='path to modified bdata file')
+    parser_modify.add_argument('--country', type=validate_country_code, required=False, metavar='COUNTRY', help='country code')
     parser_modify.add_argument('--test', default=False, action='store_true')
 
     return parser.parse_args()
@@ -104,6 +117,7 @@ def modify_command(src, dst, country=None, test=False):
         f.write(new_crc32_data)
         f.write(bdata[f.tell():])
 
+    extract_command(dst)
 
 if __name__ == "__main__":
     args = parse_arguments()

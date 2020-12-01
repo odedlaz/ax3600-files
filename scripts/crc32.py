@@ -18,7 +18,7 @@ def extract_human_readable(data):
 
 
 def calculate(data):
-    crc32 = hex(zlib.crc32(data[CRC32_LEN:]) & 0xffffffff).lstrip("0x")
+    crc32 = format(zlib.crc32(data[CRC32_LEN:]) & 0xffffffff, 'x')
     reversed_crc32 = "".join(reversed(textwrap.wrap(crc32.zfill(8), 2)))
     return "0x" + reversed_crc32
 

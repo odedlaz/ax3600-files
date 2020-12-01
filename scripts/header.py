@@ -100,7 +100,7 @@ def modify_command(src, dst, country=None, test=False):
     data_without_crc32 = b'\x00' * crc32.CRC32_LEN + new_raw_header + new_zero_data
 
     # calculate new crc32 and update the data with it
-    new_raw_crc32 = bytes.fromhex(crc32.calculate(data_without_crc32).lstrip("0x"))
+    new_raw_crc32 = bytes.fromhex(crc32.calculate(data_without_crc32)[2:])
     new_crc32_data = new_raw_crc32 + data_without_crc32[crc32.CRC32_LEN:]
 
     with open(src, "rb") as f:

@@ -1,17 +1,37 @@
 #!/usr/bin/env python3
+# credit goes to didiaoing: https://www.wutaijie.cn/?p=254
+# this script performs the manual steps outlined in his post
+
 import argparse
 import crc32
 import re
+import sys
+import enum
 
 if sys.version_info < (3,7):
     print("python version is not supported", file=sys.stderr)
     sys.exit(1)
 
-COMMAND_EXTRACT = "extract"
-COMMAND_MODIFY = "modify"
+@enum.unique
+class Command(enum.Enum):
+    Extract = enum.auto()
+    Modify = enum.auto()
 
-# credit goes to didiaoing: https://www.wutaijie.cn/?p=254
-# this script performs the manual steps outlined in his post
+    def describe(self):
+        return self.name.lower()
+
+@enum.unique
+class Models(enum.Enum):
+    AX3600 = enum.auto()
+    AX1800 = enum.auto()
+    AC2350 = enum.auto()
+
+    def describe(self):
+        return self.name.upper()
+
+    @classmethod
+    def all(cls):
+        return [x.describe() for x in cls]
 
 
 def extract(path):
@@ -49,14 +69,16 @@ def validate_country_code(cc):
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Header Parser')
     subparsers = parser.add_subparsers(title="commands", dest="command")
+    subparsers.required = True
 
-    parser_extract = subparsers.add_parser(COMMAND_EXTRACT, help='extract header')
+    parser_extract = subparsers.add_parser(Command.Extract.describe(), help='extract header')
     parser_extract.add_argument('path', metavar='PATH')
 
-    parser_modify = subparsers.add_parser(COMMAND_MODIFY, help='modify header')
+    parser_modify = subparsers.add_parser(Command.Modify.describe(), help='modify header')
     parser_modify.add_argument('src', metavar='SRC', help='path to bdata file')
     parser_modify.add_argument('dst', metavar='DST', help='path to modified bdata file')
     parser_modify.add_argument('--country', type=validate_country_code, required=False, metavar='COUNTRY', help='country code')
+    parser_modify.add_argument('--model', required=True, metavar='MODEL', choices=Models.all(), type=str.upper, help='router model')
     parser_modify.add_argument('--test', default=False, action='store_true')
 
     return parser.parse_args()
@@ -70,7 +92,7 @@ def extract_command(path):
         print(f"{k}: {v}")
 
 
-def modify_command(src, dst, country=None, test=False):
+def modify_command(src, dst, model, country=None, test=False):
     raw_header = extract(src)
 
     header = parse(raw_header)
@@ -105,7 +127,12 @@ def modify_command(src, dst, country=None, test=False):
 
     # calculate new crc32 and update the data with it
     # TODO: replace with 'str.removeprefix' which was added in 3.9
-    new_raw_crc32 = bytes.fromhex(crc32.calculate(data_without_crc32)[len("0x"):])
+    crc32_of_data_only = crc32.calculate(data_without_crc32)[len("0x"):]
+
+    if model == Models.AC2350.name:
+        crc32_of_data_only = crc32_of_data_only[::-1]
+
+    new_raw_crc32 = bytes.fromhex(crc32_of_data_only)
     new_crc32_data = new_raw_crc32 + data_without_crc32[crc32.CRC32_LEN:]
 
     with open(src, "rb") as f:
@@ -128,8 +155,8 @@ def modify_command(src, dst, country=None, test=False):
 if __name__ == "__main__":
     args = parse_arguments()
 
-    if args.command == COMMAND_EXTRACT:
+    if args.command == Commands.Extract.describe():
         extract_command(args.path)
 
-    if args.command == COMMAND_MODIFY:
-        modify_command(args.src, args.dst, args.country, args.test)
+    if args.command == Commands.Modify.describe():
+        modify_command(args.src, args.dst, args.model, args.country, args.test)

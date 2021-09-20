@@ -3,6 +3,10 @@ import sys
 import hashlib
 import header
 
+if sys.version_info < (3,7):
+    print("python version is not supported", file=sys.stderr)
+    sys.exit(1)
+
 # credit goes to zhoujiazhao:
 # https://blog.csdn.net/zhoujiazhao/article/details/102578244
 

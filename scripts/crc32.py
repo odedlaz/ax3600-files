@@ -1,8 +1,11 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.7
 import sys
 import zlib
 import textwrap
 
+if sys.version_info < (3,7):
+    print("python version is not supported", file=sys.stderr)
+    sys.exit(1)
 
 CRC32_LEN = 0x4
 CRC32_DATA_LEN = 0xffff

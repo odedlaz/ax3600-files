@@ -1,7 +1,11 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 import argparse
 import crc32
 import re
+
+if sys.version_info < (3,7):
+    print("python version is not supported", file=sys.stderr)
+    sys.exit(1)
 
 COMMAND_EXTRACT = "extract"
 COMMAND_MODIFY = "modify"

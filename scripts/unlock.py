@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
 import argparse
 import sys
 import os
@@ -6,6 +6,10 @@ import shutil
 import urllib
 import urllib.request
 import json
+
+if sys.version_info < (3,7):
+    print("python version is not supported", file=sys.stderr)
+    sys.exit(1)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Root Unlocker')

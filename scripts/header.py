@@ -155,8 +155,8 @@ def modify_command(src, dst, model, country=None, test=False):
 if __name__ == "__main__":
     args = parse_arguments()
 
-    if args.command == Commands.Extract.describe():
+    if args.command == Command.Extract.describe():
         extract_command(args.path)
 
-    if args.command == Commands.Modify.describe():
+    if args.command == Command.Modify.describe():
         modify_command(args.src, args.dst, args.model, args.country, args.test)
